@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PnP-Updater</title>
+</head>
+
+<body>
+    <button onclick="updateServer()">Update Server</button>
+    <button onclick="updateClient">Update Client</button>
+    <select name="version" id="version">
+        <% for (var i = 0; i < versions.length;  i++ ) { %>
+        <option><%= versions[i] %></option>
+        <% } %>
+    </select>
+    <script>
+        // TODO implement update server
+        function updateServer() {
+
+        }
+
+        // TODO implement update client
+        function updateClient() {
+            var selectedVersion = document.getElementById('version').value;
+        }
+    </script>
+</body>
+
+</html>

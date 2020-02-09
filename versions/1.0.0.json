@@ -1,0 +1,6 @@
+{
+    "commit": "ID hash",
+    "commands": [
+        "ls", "echo ok"
+    ]
+}

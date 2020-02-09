@@ -1,0 +1,11 @@
+{
+    "esversion": 8,
+    "undef": true,
+    "unused": true,
+    "globals": {
+        "require": false,
+        "__dirname": false,
+        "module": false,
+        "console": false
+    }
+}
