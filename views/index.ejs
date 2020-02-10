@@ -9,22 +9,58 @@
 </head>
 
 <body>
+    <pre id="success" style="display: none; background-color: #55ef55;">Updated!</pre>
+    <pre id="error" style="background-color: #ff6363;"></pre>
+    <hr>
     <button onclick="updateServer()">Update Server</button>
-    <button onclick="updateClient">Update Client</button>
+    <button onclick="updateClient()">Update Client</button>
     <select name="version" id="version">
         <% for (var i = 0; i < versions.length;  i++ ) { %>
         <option><%= versions[i] %></option>
         <% } %>
     </select>
     <script>
-        // TODO implement update server
         function updateServer() {
+            var xhttp = new XMLHttpRequest();
 
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('success').style.display = 'none';
+            
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById('success').style.display = 'block';
+                } else if (this.readyState == 4) {
+                    document.getElementById('error').innerHTML = xhttp.responseText;
+                    document.getElementById('error').style.display = 'block';
+                }
+            };
+            xhttp.open('POST', 'http://localhost:3333/update', true);
+            xhttp.send();
         }
 
-        // TODO implement update client
         function updateClient() {
             var selectedVersion = document.getElementById('version').value;
+            var xhttp = new XMLHttpRequest();
+
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('success').style.display = 'none';
+
+            if (!selectedVersion) {
+                document.getElementById('error').innerHTML = 'Select version first!';
+                document.getElementById('error').style.display = 'block';
+                return;
+            }
+
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById('success').style.display = 'block';
+                } else if (this.readyState == 4) {
+                    document.getElementById('error').innerHTML = xhttp.responseText;
+                    document.getElementById('error').style.display = 'block';
+                }
+            };
+            xhttp.open('POST', 'http://localhost:3333/update/' + selectedVersion, true);
+            xhttp.send();
         }
     </script>
 </body>
