@@ -65,21 +65,34 @@ app.post('/update', async (req, res, next) => {
 
 // POST /update/:version -> update evnotipi with cmd
 app.post('/update/:version', async (req, res, next) => {
+    let currentCommit;
+
     try {
         let version;
 
         if (!(version = await getVersion(req.params.version))) return res.sendStatus(404);
-        // TODO get current commit -> rollback feature
-        // TODO checkout commit, pull automatically?
+        currentCommit = await execCmd('cd /opt/evnotipi && sudo git rev-parse HEAD');
+
+        await execCmd('cd /opt/evnotipi && sudo git pull');
+        await execCmd(`cd /opt/evnotipi && sudo git checkout ${version.commit}`);
         for (const key in version.commands) {
             if (version.commands.hasOwnProperty(key)) {
                 const command = version.commands[key];
 
-                console.log(await execCmd(command));
+                await execCmd(command);
             }
         }
         res.sendStatus(200);
     } catch (error) {
+        if (currentCommit) {
+            // rollback to last working version
+            try {
+                await execCmd(`cd /opt/evnotipi && sudo git checkout ${currentCommit}`);
+                return next(new Error('Update failed. Rolled back to previous working version'));
+            } catch (error) {
+                return next(error);
+            }
+        }
         next(error);
     }
 });

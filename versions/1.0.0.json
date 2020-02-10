@@ -1,6 +1,6 @@
 {
-    "commit": "ID hash",
+    "commit": "1fafb097c9896cf5eebc6adc0c5f481827ac942d",
     "commands": [
-        "ls", "echo ok"
+        "sudo systemctl restart evnotipi.service"
     ]
 }
