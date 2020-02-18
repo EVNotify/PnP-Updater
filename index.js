@@ -73,7 +73,7 @@ app.post('/update/:version', async (req, res, next) => {
         if (!(version = await getVersion(req.params.version))) return res.sendStatus(404);
         currentCommit = await execCmd('cd /opt/evnotipi && sudo git rev-parse HEAD');
 
-        await execCmd('cd /opt/evnotipi && sudo git pull');
+        await execCmd('cd /opt/evnotipi && sudo git checkout master && sudo git pull');
         await execCmd(`cd /opt/evnotipi && sudo git checkout ${version.commit}`);
         for (const key in version.commands) {
             if (version.commands.hasOwnProperty(key)) {
