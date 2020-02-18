@@ -34,7 +34,7 @@
                     document.getElementById('error').style.display = 'block';
                 }
             };
-            xhttp.open('POST', 'http://localhost:3333/update', true);
+            xhttp.open('POST', 'http://192.168.4.1:3333/update', true);
             xhttp.send();
         }
 
@@ -59,7 +59,7 @@
                     document.getElementById('error').style.display = 'block';
                 }
             };
-            xhttp.open('POST', 'http://localhost:3333/update/' + selectedVersion, true);
+            xhttp.open('POST', 'http://192.168.4.1:3333/update/' + selectedVersion, true);
             xhttp.send();
         }
     </script>
