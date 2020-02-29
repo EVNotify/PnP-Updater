@@ -21,7 +21,7 @@
         <% } %>
     </select>
     <script>
-        function getClientStatus() {
+        function sendRequest(method, action) {
             var xhttp = new XMLHttpRequest();
 
             document.getElementById('error').style.display = 'none';
@@ -35,26 +35,16 @@
                     document.getElementById('error').style.display = 'block';
                 }
             };
-            xhttp.open('GET', 'http://192.168.8.10:3333/client/status', true);
+            xhttp.open(method, 'http://192.168.8.10:3333' + (action || ''), true);
             xhttp.send();
         }
 
-        function updateServer() {
-            var xhttp = new XMLHttpRequest();
+        function getClientStatus() {
+            sendRequest('GET', '/client/status');
+        }
 
-            document.getElementById('error').style.display = 'none';
-            document.getElementById('success').style.display = 'none';
-            
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById('success').style.display = 'block';
-                } else if (this.readyState == 4) {
-                    document.getElementById('error').innerHTML = xhttp.responseText;
-                    document.getElementById('error').style.display = 'block';
-                }
-            };
-            xhttp.open('POST', 'http://192.168.8.10:3333/update', true);
-            xhttp.send();
+        function updateServer() {
+            sendRequest('POST', '/update');
         }
 
         function updateClient() {
@@ -70,16 +60,7 @@
                 return;
             }
 
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById('success').style.display = 'block';
-                } else if (this.readyState == 4) {
-                    document.getElementById('error').innerHTML = xhttp.responseText;
-                    document.getElementById('error').style.display = 'block';
-                }
-            };
-            xhttp.open('POST', 'http://192.168.8.10:3333/update/' + selectedVersion, true);
-            xhttp.send();
+            sendRequest('POST', '/update' + selectedVersion);
         }
     </script>
 </body>
