@@ -12,6 +12,7 @@
     <pre id="success" style="display: none; background-color: #55ef55;">Updated!</pre>
     <pre id="error" style="background-color: #ff6363;"></pre>
     <hr>
+    <button onclick="getClientStatus()">Client Status</button>
     <button onclick="updateServer()">Update Server</button>
     <button onclick="updateClient()">Update Client</button>
     <select name="version" id="version">
@@ -20,6 +21,24 @@
         <% } %>
     </select>
     <script>
+        function getClientStatus() {
+            var xhttp = new XMLHttpRequest();
+
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('success').style.display = 'none';
+            
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById('success').style.display = 'block';
+                } else if (this.readyState == 4) {
+                    document.getElementById('error').innerHTML = xhttp.responseText;
+                    document.getElementById('error').style.display = 'block';
+                }
+            };
+            xhttp.open('GET', 'http://192.168.8.10:3333/client/status', true);
+            xhttp.send();
+        }
+
         function updateServer() {
             var xhttp = new XMLHttpRequest();
 

@@ -52,6 +52,15 @@ app.get('/', async (req, res, next) => {
     }
 });
 
+// GET /client/status -> status of evnotipi service
+app.get('/client/status', async (req, res, next) => {
+    try {
+        res.send(await execCmd('sudo systemctl status evnotipi.service'));
+    } catch (error) {
+        next(error);
+    }
+});
+
 // POST /update -> git pull updater
 app.post('/update', async (req, res, next) => {
     try {
