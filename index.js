@@ -65,6 +65,7 @@ app.get('/client/status', async (req, res, next) => {
 app.post('/update', async (req, res, next) => {
     try {
         await execCmd('git pull');
+        await execCmd('npm i');
         await execCmd('pm2 flush && pm2 restart all');
         res.sendStatus(200);
     } catch (error) {
