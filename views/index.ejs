@@ -29,9 +29,10 @@
             
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById('success').innerText = xhttp.responseText;
                     document.getElementById('success').style.display = 'block';
                 } else if (this.readyState == 4) {
-                    document.getElementById('error').innerHTML = xhttp.responseText;
+                    document.getElementById('error').innerText = xhttp.responseText;
                     document.getElementById('error').style.display = 'block';
                 }
             };
@@ -55,7 +56,7 @@
             document.getElementById('success').style.display = 'none';
 
             if (!selectedVersion) {
-                document.getElementById('error').innerHTML = 'Select version first!';
+                document.getElementById('error').innerText = 'Select version first!';
                 document.getElementById('error').style.display = 'block';
                 return;
             }
