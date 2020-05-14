@@ -83,6 +83,7 @@ app.get('/', async (req, res, next) => {
 app.get('/client/status', async (req, res, next) => {
     try {
         res.send(await execCmd('sudo systemctl status evnotipi.service'));
+        if (rollbar) rollbar.info('Client status requested');
     } catch (error) {
         if (rollbar) rollbar.error(error);
         next(error);
@@ -96,6 +97,7 @@ app.post('/update', async (req, res, next) => {
         await execCmd('npm i');
         await execCmd('pm2 flush && pm2 restart all');
         res.sendStatus(200);
+        if (rollbar) rollbar.info('Server updated');
     } catch (error) {
         if (rollbar) rollbar.error(error);
         next(error);
@@ -122,12 +124,14 @@ app.post('/update/:version', async (req, res, next) => {
             }
         }
         res.sendStatus(200);
+        if (rollbar) rollbar.info('Client updated');
     } catch (error) {
         if (rollbar) rollbar.error(error);
         if (currentCommit) {
             // rollback to last working version
             try {
                 await execCmd(`cd /opt/evnotipi && sudo git checkout ${currentCommit}`);
+                if (rollbar) rollbar.info('Client update failed, rolled back');
                 return next(new Error('Update failed. Rolled back to previous working version'));
             } catch (error) {
                 if (rollbar) rollbar.error(error);
