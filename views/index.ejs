@@ -9,31 +9,45 @@
 </head>
 
 <body>
+    <pre id="wait" style="display: none; background-color: #eccc11;">Please wait.. Loading..</pre>
     <pre id="success" style="display: none; background-color: #55ef55;">Updated!</pre>
     <pre id="error" style="background-color: #ff6363;"></pre>
     <hr>
-    <button onclick="getClientStatus()">Client Status</button>
-    <button onclick="updateServer()">Update Server</button>
-    <button onclick="updateClient()">Update Client</button>
+    <button onclick="getClientStatus()" id="clientStatusBtn">Client Status</button>
+    <button onclick="updateServer()" id="updateServerBtn">Update Server</button>
+    <button onclick="updateClient()" id="updateClientBtn">Update Client</button>
     <select name="version" id="version">
         <% for (var i = 0; i < versions.length;  i++ ) { %>
         <option><%= versions[i] %></option>
         <% } %>
     </select>
     <script>
+        function formToggle(disabled) {
+            ['clientStatusBtn', 'updateClientBtn', 'updateServerBtn', 'version'].forEach(function(el) {
+                document.getElementById(el).disabled = disabled;
+            });
+        }
+
         function sendRequest(method, action) {
             var xhttp = new XMLHttpRequest();
 
             document.getElementById('error').style.display = 'none';
             document.getElementById('success').style.display = 'none';
+            document.getElementById('wait').style.display = 'block';
+
+            formToggle(true);
             
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     document.getElementById('success').innerText = xhttp.responseText || 'Updated!';
                     document.getElementById('success').style.display = 'block';
+                    document.getElementById('wait').style.display = 'none';
+                    formToggle(false);
                 } else if (this.readyState == 4) {
                     document.getElementById('error').innerText = xhttp.responseText || 'An unknown error occured';
                     document.getElementById('error').style.display = 'block';
+                    document.getElementById('wait').style.display = 'none';
+                    formToggle(false);
                 }
             };
             xhttp.open(method, 'http://192.168.8.10:3333' + (action || ''), true);
