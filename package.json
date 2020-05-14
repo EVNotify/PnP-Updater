@@ -18,6 +18,7 @@
   "homepage": "https://github.com/EVNotify/PnP-Updater#readme",
   "dependencies": {
     "ejs": "^3.0.1",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "rollbar": "^2.16.1"
   }
 }

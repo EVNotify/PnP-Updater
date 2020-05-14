@@ -3,6 +3,23 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 
+let Rollbar;
+let rollbar;
+try {
+    Rollbar = require('rollbar');
+} catch (error) {
+    
+}
+
+if (Rollbar) {
+    rollbar = new Rollbar({
+        accessToken: '006dc99967de4f7a86715216e779d6c3',
+        captureUncaught: true,
+        environment: 'production',
+        captureUnhandledRejections: true
+    });
+}
+
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -12,7 +29,10 @@ const getVersions = async () => {
         fs.readdir(path.join(__dirname, 'versions'), {
             encoding: 'utf-8'
         }, (err, files) => {
-            if (err) return reject(err);
+            if (err) {
+                if (rollbar) rollbar.error(err);
+                return reject(err);
+            }
             resolve(files.map(file => file.replace('.json', '')));
         });
     });
@@ -26,7 +46,10 @@ const getVersion = async (version) => {
         fs.readFile(path.join(__dirname, 'versions', `${version}.json`), {
             encoding: 'utf-8'
         }, (err, data) => {
-            if (err || !data) return reject(err);
+            if (err || !data) {
+                if (rollbar) rollbar.error(err || 'no data for version');
+                return reject(err);
+            }
             resolve(JSON.parse(data));
         });
     });
@@ -35,7 +58,10 @@ const getVersion = async (version) => {
 const execCmd = async (cmd) => {
     return new Promise((resolve, reject) => {
         exec(cmd, (err, stdout, stderr) => {
-            if (err || stderr) return reject(err || stderr);
+            if (err || stderr) {
+                if (rollbar) rollbar.error(err || stderr);
+                return reject(err || stderr);
+            }
             resolve(stdout);
         });
     });
@@ -48,6 +74,7 @@ app.get('/', async (req, res, next) => {
             versions: await getVersions()
         });
     } catch (error) {
+        if (rollbar) rollbar.error(error);
         next(error);
     }
 });
@@ -57,6 +84,7 @@ app.get('/client/status', async (req, res, next) => {
     try {
         res.send(await execCmd('sudo systemctl status evnotipi.service'));
     } catch (error) {
+        if (rollbar) rollbar.error(error);
         next(error);
     }
 });
@@ -69,6 +97,7 @@ app.post('/update', async (req, res, next) => {
         await execCmd('pm2 flush && pm2 restart all');
         res.sendStatus(200);
     } catch (error) {
+        if (rollbar) rollbar.error(error);
         next(error);
     }
 });
@@ -94,12 +123,14 @@ app.post('/update/:version', async (req, res, next) => {
         }
         res.sendStatus(200);
     } catch (error) {
+        if (rollbar) rollbar.error(error);
         if (currentCommit) {
             // rollback to last working version
             try {
                 await execCmd(`cd /opt/evnotipi && sudo git checkout ${currentCommit}`);
                 return next(new Error('Update failed. Rolled back to previous working version'));
             } catch (error) {
+                if (rollbar) rollbar.error(error);
                 return next(error);
             }
         }
