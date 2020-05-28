@@ -8,7 +8,7 @@ let rollbar;
 try {
     Rollbar = require('rollbar');
 } catch (error) {
-    
+
 }
 
 if (Rollbar) {
@@ -35,6 +35,22 @@ const getVersions = async () => {
             }
             resolve(files.map(file => file.replace('.json', '')));
         });
+    });
+};
+
+const getServerVersion = async () => {
+    return new Promise((resolve) => {
+        execCmd('git rev-parse HEAD')
+            .then(resolve)
+            .catch(() => resolve('?'));
+    });
+};
+
+const getClientVersion = async () => {
+    return new Promise((resolve) => {
+        execCmd('cd /opt/evnotipi && sudo git rev-parse HEAD')
+            .then(resolve)
+            .catch(() => resolve('?'));
     });
 };
 
@@ -70,8 +86,16 @@ const execCmd = async (cmd) => {
 // GET / -> html -> select versions
 app.get('/', async (req, res, next) => {
     try {
+        const [
+            versions,
+            serverVersion,
+            clientVersion
+        ] = await Promise.all([getVersions(), getServerVersion(), getClientVersion()]);
+
         res.render('index', {
-            versions: await getVersions()
+            versions,
+            serverVersion,
+            clientVersion
         });
     } catch (error) {
         if (rollbar) rollbar.error(error);

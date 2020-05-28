@@ -21,6 +21,9 @@
         <option><%= versions[i] %></option>
         <% } %>
     </select>
+    <hr>
+    <span>Server version: <%- clientVersion %></span><br>
+    <span>Client version: <%- serverVersion %></span>
     <script>
         function formToggle(disabled) {
             ['clientStatusBtn', 'updateClientBtn', 'updateServerBtn', 'version'].forEach(function(el) {
