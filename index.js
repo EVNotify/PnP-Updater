@@ -94,9 +94,9 @@ app.get('/', async (req, res, next) => {
         ] = await Promise.all([getVersions(), getServerVersion(), getClientVersion()]);
 
         res.render('index', {
-            versions,
-            serverVersion,
-            clientVersion
+            versions: versions || [],
+            serverVersion: serverVersion || '?',
+            clientVersion: clientVersion || '?'
         });
     } catch (error) {
         if (rollbar) rollbar.error(error);
