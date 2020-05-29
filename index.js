@@ -74,10 +74,11 @@ const getVersion = async (version) => {
 const execCmd = async (cmd) => {
     return new Promise((resolve, reject) => {
         exec(cmd, (err, stdout, stderr) => {
-            if (err || stderr) {
-                if (rollbar) rollbar.error(err || stderr);
-                return reject(err || stderr);
-            }
+            // some commands unfortunately go to stderr, even if there are no errors..
+            // if (err || stderr) {
+            //     if (rollbar) rollbar.error(err || stderr);
+            //     return reject(err || stderr);
+            // }
             resolve(stdout);
         });
     });
