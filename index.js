@@ -121,6 +121,7 @@ app.post('/update', async (req, res, next) => {
         await execCmd('sudo mount -o remount,rw /');
         await execCmd('git pull');
         await execCmd('npm i');
+        await execCmd('sync');
         await execCmd('pm2 flush && pm2 restart all');
         await execCmd('sudo systemctl restart pnpupdater.service');
         await execCmd('sudo mount -o remount,ro /');
@@ -152,6 +153,7 @@ app.post('/update/:version', async (req, res, next) => {
                 await execCmd(command);
             }
         }
+        await execCmd('sync');
         await execCmd('sudo systemctl restart evnotipi.service');
         await execCmd('sudo mount -o remount,ro /');
         res.sendStatus(200);
@@ -163,6 +165,8 @@ app.post('/update/:version', async (req, res, next) => {
             try {
                 await execCmd(`cd /opt/evnotipi && sudo git checkout ${currentCommit}`);
                 if (rollbar) rollbar.info('Client update failed, rolled back');
+                await execCmd('sync');
+                await execCmd('sudo systemctl restart evnotipi.service');
                 return next(new Error('Update failed. Rolled back to previous working version'));
             } catch (error) {
                 if (rollbar) rollbar.error(error);
