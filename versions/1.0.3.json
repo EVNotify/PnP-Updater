@@ -1,6 +1,4 @@
 {
     "commit": "007cac17612c348acc0099c682dfb6302f1927ab",
-    "commands": [
-        "sudo systemctl restart evnotipi.service"
-    ]
+    "commands": []
 }

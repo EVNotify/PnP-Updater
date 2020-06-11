@@ -118,9 +118,12 @@ app.get('/client/status', async (req, res, next) => {
 // POST /update -> git pull updater
 app.post('/update', async (req, res, next) => {
     try {
+        await execCmd('sudo mount -o remount,rw /');
         await execCmd('git pull');
         await execCmd('npm i');
         await execCmd('pm2 flush && pm2 restart all');
+        await execCmd('sudo systemctl restart pnpupdater.service');
+        await execCmd('sudo mount -o remount,ro /');
         res.sendStatus(200);
         if (rollbar) rollbar.info('Server updated');
     } catch (error) {
@@ -136,6 +139,7 @@ app.post('/update/:version', async (req, res, next) => {
     try {
         let version;
 
+        await execCmd('sudo mount -o remount,rw /');
         if (!(version = await getVersion(req.params.version))) return res.sendStatus(404);
         currentCommit = await execCmd('cd /opt/evnotipi && sudo git rev-parse HEAD');
 
@@ -148,6 +152,8 @@ app.post('/update/:version', async (req, res, next) => {
                 await execCmd(command);
             }
         }
+        await execCmd('sudo systemctl restart evnotipi.service');
+        await execCmd('sudo mount -o remount,ro /');
         res.sendStatus(200);
         if (rollbar) rollbar.info('Client updated');
     } catch (error) {
