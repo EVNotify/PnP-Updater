@@ -125,7 +125,9 @@ app.post('/update', async (req, res, next) => {
         await execCmd('pm2 flush && pm2 restart all');
         await execCmd('sudo systemctl restart pnpupdater.service');
         await execCmd('sudo mount -o remount,ro /');
-        res.sendStatus(200);
+        res.send({
+            status: true
+        });
         if (rollbar) rollbar.info('Server updated');
     } catch (error) {
         if (rollbar) rollbar.error(error);
@@ -156,7 +158,9 @@ app.post('/update/:version', async (req, res, next) => {
         await execCmd('sync');
         await execCmd('sudo systemctl restart evnotipi.service');
         await execCmd('sudo mount -o remount,ro /');
-        res.sendStatus(200);
+        res.send({
+            status: true
+        });
         if (rollbar) rollbar.info('Client updated');
     } catch (error) {
         if (rollbar) rollbar.error(error);
