@@ -124,9 +124,9 @@ app.post('/update', async (req, res, next) => {
         await execCmd('sync');
         res.sendStatus(200);
         await execCmd('sudo mount -o remount,ro /');
+        if (rollbar) rollbar.info('Server updated');
         await execCmd('pm2 flush && pm2 restart all');
         await execCmd('sudo systemctl restart pnpupdater.service');
-        if (rollbar) rollbar.info('Server updated');
     } catch (error) {
         if (rollbar) rollbar.error(error);
         next(error);
