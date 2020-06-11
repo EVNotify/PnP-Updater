@@ -34,6 +34,8 @@
         function sendRequest(method, action) {
             var xhttp = new XMLHttpRequest();
 
+            xhttp.timeout = 300000;
+
             document.getElementById('error').style.display = 'none';
             document.getElementById('success').style.display = 'none';
             document.getElementById('wait').style.display = 'block';
@@ -67,7 +69,6 @@
 
         function updateClient() {
             var selectedVersion = document.getElementById('version').value;
-            var xhttp = new XMLHttpRequest();
 
             document.getElementById('error').style.display = 'none';
             document.getElementById('success').style.display = 'none';
