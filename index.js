@@ -184,8 +184,8 @@ app.post('/update/:version', async (req, res, next) => {
 });
 
 app.post('/volatilestorage', async (req, res, next) => {
-    await execCmd(`sudo sed -i '#Storage=auto/Storage=volatile' /etc/systemd/journald.conf`);
-    await execCmd(`sudo sed -i '#RuntimeMaxUse=/RuntimeMaxUse=10M' /etc/systemd/journald.conf`);
+    await execCmd(`sudo sed -i 's/#Storage=auto/Storage=volatile/g' /etc/systemd/journald.conf`);
+    await execCmd(`sudo sed -i 's/#RuntimeMaxUse=/RuntimeMaxUse=10M/g' /etc/systemd/journald.conf`);
     res.sendStatus(200);
 });
 
