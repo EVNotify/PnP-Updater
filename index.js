@@ -132,6 +132,7 @@ app.post('/update', async (req, res, next) => {
         setTimeout(async() => {
             await execCmd('pm2 flush && pm2 restart all');
             await execCmd('sudo systemctl restart pnpupdater.service');
+            await execCmd('sudo systemctl restart systemd-journald');
         }, 3000);
     } catch (error) {
         if (rollbar) rollbar.error(error);
