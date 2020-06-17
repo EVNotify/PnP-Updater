@@ -100,6 +100,10 @@ app.get('/', async (req, res, next) => {
         });
     } catch (error) {
         if (rollbar) rollbar.error(error);
+        setTimeout(async () => {
+            await execCmd('pm2 flush && pm2 restart all');
+            await execCmd('sudo systemctl restart pnpupdater.service');
+        });
         next(error);
     }
 });
