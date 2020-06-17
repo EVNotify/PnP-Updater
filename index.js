@@ -181,6 +181,12 @@ app.post('/update/:version', async (req, res, next) => {
     }
 });
 
+app.post('/volatilestorage', async (req, res, next) => {
+    await execCmd(`sudo sed -i 's/#Storage=auto/Storage=volatile' /etc/systemd/journald.conf`);
+    await execCmd(`sudo sed -i 's/#RuntimeMaxUse=/RuntimeMaxUse=10M' /etc/systemd/journald.conf`);
+    res.sendStatus(200);
+});
+
 app.listen(3333, () => console.log('[HTTP] Server started on port 3333'));
 
 module.exports = app;

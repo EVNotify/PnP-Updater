@@ -24,6 +24,8 @@
     <hr>
     <span>Server version: <%- serverVersion %></span><br>
     <span>Client version: <%- clientVersion %></span>
+    <hr>
+    <button onclick="volatileStorage()" id="volatileStorageBtn">Volatile Storage</button>
     <script>
         function formToggle(disabled) {
             ['clientStatusBtn', 'updateClientBtn', 'updateServerBtn', 'version'].forEach(function(el) {
@@ -80,6 +82,10 @@
             }
 
             sendRequest('POST', '/update/' + selectedVersion);
+        }
+
+        function volatileStorage() {
+            sendRequest('POST', '/volatilestorage');
         }
     </script>
 </body>
