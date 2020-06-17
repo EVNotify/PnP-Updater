@@ -103,7 +103,7 @@ app.get('/', async (req, res, next) => {
         setTimeout(async () => {
             await execCmd('pm2 flush && pm2 restart all');
             await execCmd('sudo systemctl restart pnpupdater.service');
-        });
+        }, 3000);
         next(error);
     }
 });
