@@ -17,6 +17,7 @@
     <button onclick="updateServer()" id="updateServerBtn">Update Server</button>
     <button onclick="updateClient()" id="updateClientBtn">Update Client</button>
     <button onclick="restartClient()" id="restartClientBtn">Restart Client</button>
+    <button onclick="getClientConfig()" id="configBtn">Get Config</button>
     <select name="version" id="version">
         <% for (var i = 0; i < versions.length;  i++ ) { %>
         <option><%= versions[i] %></option>
@@ -29,7 +30,7 @@
     <button onclick="volatileStorage()" id="volatileStorageBtn">Volatile Storage</button>
     <script>
         function formToggle(disabled) {
-            ['clientStatusBtn', 'updateClientBtn', 'restartClientBtn', 'updateServerBtn', 'version'].forEach(function(el) {
+            ['clientStatusBtn', 'updateClientBtn', 'restartClientBtn', 'configBtn', 'updateServerBtn', 'version'].forEach(function(el) {
                 document.getElementById(el).disabled = disabled;
             });
         }
@@ -72,6 +73,10 @@
 
         function restartClient() {
             sendRequest('POST', '/client/restart');
+        }
+
+        function getClientConfig() {
+            sendRequest('GET', '/client/config');
         }
 
         function updateClient() {

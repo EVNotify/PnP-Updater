@@ -195,6 +195,10 @@ app.post('/client/restart', async (req, res, next) => {
     res.sendStatus(200);
 });
 
+app.get('/client/config', async (req, res, next) => {
+    res.send(await execCmd(`sudo cat /opt/evnotipi/config.yaml`));
+});
+
 app.listen(3333, () => console.log('[HTTP] Server started on port 3333'));
 
 module.exports = app;
