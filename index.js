@@ -190,6 +190,11 @@ app.post('/volatilestorage', async (req, res, next) => {
     res.sendStatus(200);
 });
 
+app.post('/client/restart', async (req, res, next) => {
+    await execCmd(`sudo systemctl restart evnotipi.service`);
+    res.sendStatus(200);
+});
+
 app.listen(3333, () => console.log('[HTTP] Server started on port 3333'));
 
 module.exports = app;
