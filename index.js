@@ -185,8 +185,24 @@ app.post('/update/:version', async (req, res, next) => {
 });
 
 app.post('/volatilestorage', async (req, res, next) => {
+    await execCmd('sudo mount -o remount,rw /');
     await execCmd(`sudo sed -i 's/#Storage=auto/Storage=volatile/g' /etc/systemd/journald.conf`);
     await execCmd(`sudo sed -i 's/#RuntimeMaxUse=/RuntimeMaxUse=10M/g' /etc/systemd/journald.conf`);
+    await execCmd('sudo mount -o remount,ro /');
+    res.sendStatus(200);
+});
+
+app.post('/debug/on', async (req, res, next) => {
+    await execCmd('sudo mount -o remount,rw /');
+    await execCmd(`sudo sed -i -e 's/loglevel: 30/loglevel: 10/g' /opt/evnotipi/config.yaml`);
+    await execCmd('sudo mount -o remount,ro /');
+    res.sendStatus(200);
+});
+
+app.post('/debug/off', async (req, res, next) => {
+    await execCmd('sudo mount -o remount,rw /');
+    await execCmd(`sudo sed -i -e 's/loglevel: 10/loglevel: 30/g' /opt/evnotipi/config.yaml`);
+    await execCmd('sudo mount -o remount,ro /');
     res.sendStatus(200);
 });
 

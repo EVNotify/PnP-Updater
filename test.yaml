@@ -1,0 +1,9 @@
+foo:
+  - test
+loglevel: 10 # Info / Warning
+
+test
+
+watchdog:
+# Enable if
+enabled: false

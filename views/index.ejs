@@ -34,9 +34,11 @@
     <span>Client version: <%- clientVersion %></span>
     <hr>
     <button onclick="volatileStorage()" id="volatileStorageBtn">Volatile Storage</button>
+    <button onclick="debugmode('on')" id="debugModeOnBtn">Debug Mode On</button>
+    <button onclick="debugmode('off')" id="debugModeOffBtn">Debug Mode Off</button>
     <script>
         function formToggle(disabled) {
-            ['clientStatusBtn', 'updateClientBtn', 'restartClientBtn', 'configBtn', 'updateServerBtn', 'version'].forEach(function(el) {
+            ['clientStatusBtn', 'updateClientBtn', 'restartClientBtn', 'configBtn', 'updateServerBtn', 'version', 'volatileStorageBtn', 'debugModeOnBtn', 'debugModeOffBtn'].forEach(function(el) {
                 document.getElementById(el).disabled = disabled;
             });
         }
@@ -106,6 +108,10 @@
 
         function volatileStorage() {
             sendRequest('POST', '/volatilestorage');
+        }
+
+        function debugmode(state) {
+            sendRequest('POST', '/debug/' + state);
         }
     </script>
 </body>

@@ -1,0 +1,5 @@
+foo:
+  - test
+loglevel: 30 # Info / Warning
+
+test
