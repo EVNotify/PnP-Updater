@@ -206,6 +206,13 @@ app.post('/debug/off', async (req, res, next) => {
     res.sendStatus(200);
 });
 
+app.delete('/submodule', async (req, res, next) => {
+    await execCmd('sudo mount -o remount,rw /');
+    await execCmd(`sudo rm -rf /opt/evnotipi/EVNotifyAPI`);
+    await execCmd('sudo mount -o remount,ro /');
+    res.sendStatus(200);
+});
+
 app.post('/client/restart', async (req, res, next) => {
     await execCmd(`sudo systemctl restart evnotipi.service`);
     res.sendStatus(200);
