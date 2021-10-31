@@ -24,7 +24,7 @@ const app = express();
 
 app.set('view engine', 'ejs');
 
-const getVersions = async () => {
+const getVersionFiles = async() => {
     return new Promise((resolve, reject) => {
         fs.readdir(path.join(__dirname, 'versions'), {
             encoding: 'utf-8'
@@ -33,8 +33,16 @@ const getVersions = async () => {
                 if (rollbar) rollbar.error(err);
                 return reject(err);
             }
-            resolve(files.map(file => file.replace('.json', '')));
+
+            resolve(files);
         });
+    });
+};
+
+const getVersions = async () => {
+    return new Promise((resolve) => {
+        getVersionFiles()
+            .then((files) => resolve(files.map(file => file.replace('.json', ''))));
     });
 };
 
@@ -49,7 +57,24 @@ const getServerVersion = async () => {
 const getClientVersion = async () => {
     return new Promise((resolve) => {
         execCmd('cd /opt/evnotipi && sudo git rev-parse HEAD')
-            .then(resolve)
+            .then((currentVersion) => {
+                getVersionFiles()
+                    .then(async (files) => {
+                        for (const file in files) {
+                            if (files.hasOwnProperty(file)) {
+                                const version = files[file].replace('.json', '');
+
+                                const data = await getVersion(version);
+                                
+                                if (data.commit === currentVersion) {
+                                    return resolve(version);
+                                }
+                            }
+                        }
+
+                        resolve(currentVersion);
+                    });
+            })
             .catch(() => resolve('?'));
     });
 };
